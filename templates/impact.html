@@ -81,8 +81,8 @@
                 <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" viewBox="0 0 16 16"> <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/> </svg>
             </label>
             <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow bg-base-200 rounded-box w-52">
-                <li><a href="/impact" class="{% if year == 2025 %}active{% endif %}">2025 (Current)</a></li>
-                <li><a href="/impact/2024" class="{% if year == 2024 %}active{% endif %}">2024</a></li>
+                <li><a href="{{ get_url(path='impact') | safe }}" class="{% if year == 2025 %}active{% endif %}">2025 (Current)</a></li>
+                <li><a href="{{ get_url(path='impact/2024') | safe }}" class="{% if year == 2024 %}active{% endif %}">2024</a></li>
             </ul>
         </div>
     </div>
