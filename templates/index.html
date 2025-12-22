@@ -17,8 +17,31 @@
         {{ macros_head::head(config=config, page=false, section=false, current_url=config.base_url) }}
     {% endif %}
     {% block extra_head %}{% endblock extra_head %}
+
     {# Custom CSS for Font Awesome fix #}
     <link rel="stylesheet" href="{{ get_url(path="css/custom.css") | safe }}">
+
+    <style>
+        /* Desktop Sidebar Animation */
+        @media (min-width: 1024px) {
+            /* Only apply fixed width when drawer is in open mode (sidebar visible) */
+            .lg\:drawer-open #sidebar {
+                width: 17rem; /* w-72 default */
+                transition: width 300ms cubic-bezier(0.4, 0, 0.2, 1), border-width 300ms ease;
+                white-space: nowrap;
+            }
+            
+            .lg\:drawer-open #sidebar.sidebar-closed {
+                width: 0;
+                border-right-width: 0;
+            }
+            
+            /* For overlay mode on desktop (landing page), ensure full width for overlay */
+            .drawer:not(.lg\:drawer-open) #sidebar {
+                width: 100%;
+            }
+        }
+    </style>
 </head>
 <body>
     {{ macros_search::search(config=config) }}
@@ -29,7 +52,7 @@
     <div class="drawer {% if not is_root_page %}lg:drawer-open{% endif %}">
         <input id="my-drawer-2" type="checkbox" class="drawer-toggle" />
         <div class="drawer-content flex flex-col pt-16">
-            {{ macros_header::header(config=config, lang=lang) }}
+            {{ macros_header::header(config=config, lang=lang, is_root_page=is_root_page) }}
 
             {% set lang_root_path = "/" ~ lang ~ "/" %}
             {# Sidebar configuration with backward compatibility #}
@@ -164,6 +187,19 @@
                 {{ macros_sidebar::sidebar(config=config, lang=lang, current_path=current_path, section=false) }}
             {% endif %}
         </div>
+        
+        <script>
+            // Apply sidebar preference immediately to prevent FOUC
+            (function() {
+                try {
+                    var savedState = localStorage.getItem('sidebar-state');
+                    var sidebar = document.getElementById('sidebar');
+                    if (savedState === 'closed' && sidebar) {
+                        sidebar.classList.add('sidebar-closed');
+                    }
+                } catch (e) {}
+            })();
+        </script>
     </div>
 
     {% block js_body %}
@@ -246,6 +282,32 @@
             });
         </script>
         {% endif %}
+        
+        <script>
+            // Desktop Sidebar Toggle Logic
+            document.addEventListener('DOMContentLoaded', function() {
+                var toggleBtn = document.getElementById('desktop-sidebar-toggle');
+                var sidebar = document.getElementById('sidebar');
+                
+                if (toggleBtn && sidebar) {
+                    // Toggle handler
+                    toggleBtn.addEventListener('click', function() {
+                        // Check if closed by checking for class
+                        var isClosed = sidebar.classList.contains('sidebar-closed');
+                        
+                        if (isClosed) {
+                            // Opening
+                            sidebar.classList.remove('sidebar-closed');
+                            localStorage.setItem('sidebar-state', 'open');
+                        } else {
+                            // Closing
+                            sidebar.classList.add('sidebar-closed');
+                            localStorage.setItem('sidebar-state', 'closed');
+                        }
+                    });
+                }
+            });
+        </script>
     {% endblock js_body %}
 </body>
 </html>

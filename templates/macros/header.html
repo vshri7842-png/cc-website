@@ -1,6 +1,6 @@
 {% import "goyo/templates/macros/header.html" as theme_header %}
 
-{% macro header(config, lang) %}
+{% macro header(config, lang, is_root_page=false) %}
 {# Re-use the theme's header macro content but fix the navigation URLs #}
 {# Resolve logo configuration with backward compatibility #}
 {% if config.extra.logo is defined %}
@@ -20,12 +20,20 @@
 {% set has_theme_specific_logos = logo_dark_image_path != "" or logo_light_image_path != "" %}
 
 <div class="navbar opacity-95 fixed top-0 left-0 right-0 z-50 h-16 border-b border-gray-500/15 backdrop-blur-3xl">
-    <!-- Mobile hamburger -->
-    <div class="flex-none lg:hidden">
+    <!-- Mobile hamburger (and Desktop on Root Page) -->
+    <div class="flex-none {% if not is_root_page %}lg:hidden{% endif %}">
         <label for="my-drawer-2" class="btn btn-square btn-ghost">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="inline-block w-5 h-5 stroke-current"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
         </label>
     </div>
+    <!-- Desktop sidebar toggle -->
+    {% if not is_root_page %}
+    <div class="flex-none hidden lg:block">
+        <button id="desktop-sidebar-toggle" class="btn btn-square btn-ghost" aria-label="Toggle sidebar">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="inline-block w-5 h-5 stroke-current"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+        </button>
+    </div>
+    {% endif %}
     <!-- Logo -->
     <div class="flex-1">
         <a href="{{ get_url(path='/') | safe }}" class="btn btn-ghost hover:animate-pulse hover:bg-transparent hover:border-transparent normal-case text-xl" style="background: linear-gradient(135deg, #9ca3af, #6b7280); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; font-weight: bold; font-size: 1.5rem;">
