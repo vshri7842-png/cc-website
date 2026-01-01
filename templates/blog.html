@@ -11,7 +11,7 @@
   - config: Site configuration
   
   Features:
-  - Client-side search (filters posts by title/description)
+  - Client-side search (searches ALL posts using global index)
   - Displays post cards with metadata
   - Shows tags for each post (clickable links)
   - Pagination (configured in content/blog/_index.md)
@@ -56,7 +56,7 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                 </svg>
             </div>
-            <input type="text" id="blog-search-input" placeholder="Search articles..." class="input input-bordered w-full pl-10" />
+            <input type="text" id="blog-search-input" placeholder="Search all articles..." class="input input-bordered w-full pl-10" />
         </div>
         <div class="mt-2 text-sm text-gray-500">
             💡 Tip: Browse by <a href="{{ get_url(path='categories') | safe }}" class="link link-hover">category</a> or <a href="{{ get_url(path='tags') | safe }}" class="link link-hover">tag</a> using the badges below each article
@@ -69,84 +69,92 @@
         {% set pages = paginator.pages %}
     {% endif %}
 
-    {% if pages %}
-        {% if section.extra.content_position is defined and section.extra.content_position == "bottom" %}
-            <h2 class="text-2xl font-bold mb-6">Recent Posts</h2>
+    {# Default blog list (shown when not searching) #}
+    <div id="default-blog-list">
+        {% if pages %}
+            {% if section.extra.content_position is defined and section.extra.content_position == "bottom" %}
+                <h2 class="text-2xl font-bold mb-6">Recent Posts</h2>
+            {% endif %}
+            <div class="grid gap-8 mt-8">
+                {% for page in pages %}
+                    <article class="card bg-base-200 shadow-xl border border-gray-500/15 transition hover:border-gray-500/40">
+                        <div class="card-body">
+                            <h2 class="card-title">
+                                <a href="{{ page.permalink }}" class="hover:text-primary transition-colors">{{ page.title }}</a>
+                                {% if page.extra.badge %}
+                                    <div class="badge badge-secondary">{{ page.extra.badge }}</div>
+                                {% endif %}
+                            </h2>
+                            <div class="text-sm text-gray-500 mb-2 flex flex-wrap gap-2 items-center">
+                                {% if page.date %}
+                                    <span>{{ page.date | date(format="%B %d, %Y") }}</span>
+                                {% endif %}
+                                
+                                {% if page.extra.reading_time or page.reading_time %}
+                                    <span>• {{ page.extra.reading_time | default(value=page.reading_time) }} min read</span>
+                                {% endif %}
+
+                                {% if page.extra.author %}
+                                    <span>• by {{ page.extra.author }}</span>
+                                {% endif %}
+                            </div>
+
+                            <div class="flex flex-wrap gap-2 mb-3">
+                                {# Display Categories first #}
+                                {% if page.taxonomies.categories %}
+                                    {% for category in page.taxonomies.categories %}
+                                        {% set cat_slug = category | slugify %}
+                                        <a href="{{ get_url(path='categories/' ~ cat_slug) | safe }}" class="badge badge-primary badge-sm" title="View all posts in category '{{ category }}'">{{ category }}</a>
+                                    {% endfor %}
+                                {% endif %}
+                                
+                                {# Display Tags as navigation links to taxonomy pages #}
+                                {% if page.taxonomies.tags %}
+                                    {% for tag in page.taxonomies.tags %}
+                                        {% set tag_slug = tag | slugify %}
+                                        <a href="{{ get_url(path='tags/' ~ tag_slug) | safe }}" class="badge badge-ghost badge-outline badge-sm hover:badge-primary transition-colors" title="View all posts tagged '{{ tag }}'">{{ tag }}</a>
+                                    {% endfor %}
+                                {% endif %}
+                            </div>
+                            <p class="text-base-content/80">
+                                {% if page.description %}
+                                    {{ page.description }}
+                                {% elif page.summary %}
+                                    {{ page.summary | safe }}
+                                {% else %}
+                                    {{ page.content | striptags | truncate(length=200) }}
+                                {% endif %}
+                            </p>
+                            <div class="card-actions justify-end mt-4">
+                                <a href="{{ page.permalink }}" class="btn btn-primary btn-sm">Read More</a>
+                            </div>
+                        </div>
+                    </article>
+                {% endfor %}
+            </div>
         {% endif %}
-        <div class="grid gap-8 mt-8">
-            {% for page in pages %}
-                <article class="card bg-base-200 shadow-xl border border-gray-500/15 transition hover:border-gray-500/40">
-                    <div class="card-body">
-                        <h2 class="card-title">
-                            <a href="{{ page.permalink }}" class="hover:text-primary transition-colors">{{ page.title }}</a>
-                            {% if page.extra.badge %}
-                                <div class="badge badge-secondary">{{ page.extra.badge }}</div>
-                            {% endif %}
-                        </h2>
-                        <div class="text-sm text-gray-500 mb-2 flex flex-wrap gap-2 items-center">
-                            {% if page.date %}
-                                <span>{{ page.date | date(format="%B %d, %Y") }}</span>
-                            {% endif %}
-                            
-                            {% if page.extra.reading_time or page.reading_time %}
-                                <span>• {{ page.extra.reading_time | default(value=page.reading_time) }} min read</span>
-                            {% endif %}
 
-                            {% if page.extra.author %}
-                                <span>• by {{ page.extra.author }}</span>
-                            {% endif %}
-                        </div>
+        {# Pagination #}
+        {% if paginator %}
+            <div class="join grid grid-cols-2 mt-8" id="blog-pagination">
+                {% if paginator.previous %}
+                    <a href="{{ paginator.previous }}" class="join-item btn btn-outline">Previous page</a>
+                {% else %}
+                    <button class="join-item btn btn-outline btn-disabled">Previous page</button>
+                {% endif %}
+                {% if paginator.next %}
+                    <a href="{{ paginator.next }}" class="join-item btn btn-outline">Next page</a>
+                {% else %}
+                    <button class="join-item btn btn-outline btn-disabled">Next page</button>
+                {% endif %}
+            </div>
+        {% endif %}
+    </div>
 
-                        <div class="flex flex-wrap gap-2 mb-3">
-                            {# Display Categories first #}
-                            {% if page.taxonomies.categories %}
-                                {% for category in page.taxonomies.categories %}
-                                    {% set cat_slug = category | slugify %}
-                                    <a href="{{ get_url(path='categories/' ~ cat_slug) | safe }}" class="badge badge-primary badge-sm" title="View all posts in category '{{ category }}'">{{ category }}</a>
-                                {% endfor %}
-                            {% endif %}
-                            
-                            {# Display Tags as navigation links to taxonomy pages #}
-                            {% if page.taxonomies.tags %}
-                                {% for tag in page.taxonomies.tags %}
-                                    {% set tag_slug = tag | slugify %}
-                                    <a href="{{ get_url(path='tags/' ~ tag_slug) | safe }}" class="badge badge-ghost badge-outline badge-sm hover:badge-primary transition-colors" title="View all posts tagged '{{ tag }}'">{{ tag }}</a>
-                                {% endfor %}
-                            {% endif %}
-                        </div>
-                        <p class="text-base-content/80">
-                            {% if page.description %}
-                                {{ page.description }}
-                            {% elif page.summary %}
-                                {{ page.summary | safe }}
-                            {% else %}
-                                {{ page.content | striptags | truncate(length=200) }}
-                            {% endif %}
-                        </p>
-                        <div class="card-actions justify-end mt-4">
-                            <a href="{{ page.permalink }}" class="btn btn-primary btn-sm">Read More</a>
-                        </div>
-                    </div>
-                </article>
-            {% endfor %}
-        </div>
-    {% endif %}
-
-    {# Pagination #}
-    {% if paginator %}
-        <div class="join grid grid-cols-2 mt-8">
-            {% if paginator.previous %}
-                <a href="{{ paginator.previous }}" class="join-item btn btn-outline">Previous page</a>
-            {% else %}
-                <button class="join-item btn btn-outline btn-disabled">Previous page</button>
-            {% endif %}
-            {% if paginator.next %}
-                <a href="{{ paginator.next }}" class="join-item btn btn-outline">Next page</a>
-            {% else %}
-                <button class="join-item btn btn-outline btn-disabled">Next page</button>
-            {% endif %}
-        </div>
-    {% endif %}
+    {# Search results container (hidden by default) #}
+    <div id="search-results-list" class="hidden">
+        <div id="search-results-grid" class="grid gap-8 mt-8"></div>
+    </div>
 
     {% if section.extra.content_position is defined and section.extra.content_position == "bottom" %}
         <div class="mt-16 pt-8 border-t border-gray-500/15">
@@ -167,28 +175,67 @@
     </div>
     {% endif %}
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const searchInput = document.getElementById('blog-search-input');
-            const articles = document.querySelectorAll('article.card');
-            
-            if (searchInput) {
-                searchInput.addEventListener('input', function(e) {
-                    const searchTerm = e.target.value.toLowerCase();
-                    
-                    articles.forEach(article => {
-                        const title = article.querySelector('.card-title').textContent.toLowerCase();
-                        const description = article.querySelector('p').textContent.toLowerCase();
-                        const tags = Array.from(article.querySelectorAll('.badge')).map(b => b.textContent.toLowerCase()).join(' ');
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const searchInput = document.getElementById('blog-search-input');
+        const defaultList = document.getElementById('default-blog-list');
+        const resultsList = document.getElementById('search-results-list');
+        const resultsGrid = document.getElementById('search-results-grid');
+        const paginator = document.getElementById('blog-pagination');
+        
+        let searchReady = false;
+        
+        if (typeof loadSearchLibraries === 'function') {
+            loadSearchLibraries(() => {
+                searchReady = true;
+                console.log("Blog search index loaded.");
+            });
+        }
+
+        function createCardHTML(item) {
+            const dateStr = item.date || '';
+            const excerpt = item.body ? item.body.substring(0, 200) + '...' : '';
+            return `
+            <article class="card bg-base-200 shadow-xl border border-gray-500/15">
+                <div class="card-body">
+                    <h2 class="card-title">
+                        <a href="${item.id}" class="hover:text-primary">${item.title}</a>
+                    </h2>
+                    ${dateStr ? `<div class="text-sm text-gray-500 mb-2">${dateStr}</div>` : ''}
+                    <p class="text-base-content/80">${excerpt}</p>
+                    <div class="card-actions justify-end mt-4">
+                        <a href="${item.id}" class="btn btn-primary btn-sm">Read More</a>
+                    </div>
+                </div>
+            </article>`;
+        }
+
+        if (searchInput) {
+            searchInput.addEventListener('input', function(e) {
+                const query = e.target.value.trim();
+                if (query.length > 0) {
+                    defaultList.classList.add('hidden');
+                    if (paginator) paginator.classList.add('hidden');
+                    resultsList.classList.remove('hidden');
+
+                    if (searchReady && window.searchIndex) {
+                        const docs = Object.values(window.searchIndex.documentStore.docs);
+                        const fuse = new Fuse(docs, { keys: ['title', 'body'], threshold: 0.3 });
+                        const results = fuse.search(query).filter(r => r.item.id.includes('/blog/'));
                         
-                        if (title.includes(searchTerm) || description.includes(searchTerm) || tags.includes(searchTerm)) {
-                            article.style.display = '';
-                        } else {
-                            article.style.display = 'none';
-                        }
-                    });
-                });
-            }
-        });
-    </script>
+                        resultsGrid.innerHTML = results.length > 0 
+                            ? results.map(r => createCardHTML(r.item)).join('')
+                            : `<div class="col-span-full text-center py-10">No matches for "${query}"</div>`;
+                    } else {
+                        resultsGrid.innerHTML = `<div class="col-span-full text-center py-10"><div class="loading loading-spinner text-primary"></div><p>Indexing posts...</p></div>`;
+                    }
+                } else {
+                    defaultList.classList.remove('hidden');
+                    if (paginator) paginator.classList.remove('hidden');
+                    resultsList.classList.add('hidden');
+                }
+            });
+        }
+    });
+</script>
 {% endblock content %}

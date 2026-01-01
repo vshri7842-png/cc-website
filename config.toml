@@ -44,8 +44,8 @@ bottom_footnotes = true
 highlight_theme = "ayu-mirage"
 
 [extra]
-# Custom footer HTML
-footer_html = "<div style='display: flex; align-items: center; justify-content: center; gap: 16px; flex-wrap: wrap;'><span>© 2025 Computer Coding Club. All rights reserved.</span><span style='opacity: 0.6;'>•</span><span>Built with <a href='https://www.getzola.org' class='font-medium text-base-content/70 hover:text-base-content transition-colors duration-200'>Zola</a> and <a href='https://github.com/hahwul/goyo' class='font-medium text-base-content/70 hover:text-base-content transition-colors duration-200'>Goyo</a></span></div>"
+# Custom footer HTML (used in bottom bar)
+footer_html = "Powered by <a href='https://www.getzola.org' class='font-medium hover:text-primary transition-colors duration-200'>Zola</a> and <a href='https://github.com/hahwul/goyo' class='font-medium hover:text-primary transition-colors duration-200'>Goyo</a>"
 
 # Default thumbnail for social media sharing (when page doesn't specify one)
 default_thumbnail = "images/cc-club-thumbnail.jpg"
@@ -53,6 +53,22 @@ default_thumbnail = "images/cc-club-thumbnail.jpg"
 # Google Analytics tag (optional - leave empty to disable)
 # TODO: Add your Google Analytics ID if needed (format: "G-XXXXXXXXXX")
 gtag = ""
+
+# Footer Configuration
+footer_logo = "images/logo/cclogo.png"  # Update with your actual logo path
+footer_title = "CC Club MNNIT"
+footer_description = "Our mission since 2010 at MNNIT is to develop in you a passion for problem-solving, critical thinking, innovation and computer science. We strive to achieve this goal through means of events, classes and industry connects."
+footer_email = "computer.club@mnnit.ac.in"
+footer_address = "MNNIT Allahabad, Prayagraj, UP - 211004"
+footer_social_text = "Connect to stay updated about our events, projects and blogs!"
+footer_made_by = "Team CC"
+
+# Footer Quick Links
+footer_links = [
+    { name = "Our Team", url = "team" },
+    { name = "Blogs", url = "blog" },
+    { name = "Projects", url = "contrihub" },
+]
 
 # Navigation menu configuration
 # Each item can be:
@@ -62,7 +78,7 @@ nav = [
     { name = "About", url = "about", type = "url", icon = "fa-solid fa-circle-info" },
     { name = "Blog", url = "blog", type = "url", icon = "fa-solid fa-blog" },
     { name = "Events", url = "events", type = "url", icon = "fa-solid fa-calendar-days" },
-    { name = "ContriHub", url = "contrihub", type = "url", icon = "fa-solid fa-code-branch" },
+    { name = "Projects", url = "contrihub", type = "url", icon = "fa-solid fa-code-branch" },
     { name = "Impact", url = "impact", type = "url", icon = "fa-solid fa-rocket" },
     { name = "Roadmaps", url = "roadmaps", type = "url", icon = "fa-solid fa-route" },
     { name = "Resources", url = "resources", type = "url", icon = "fa-solid fa-book-open" },
@@ -87,8 +103,16 @@ image_padding = "10px"                     # Padding around logo image
 
 # Social Media Configuration
 [extra.twitter]
-site = "@your_club_handle"     # Update: Your club's Twitter/X handle
-creator = "@your_club_handle"  # Twitter/X handle for content creator
+site = "@ccclub_mnnit"         
+creator = "@ccclub_mnnit"      
+
+# Social Media Links for Footer
+[extra.social_links]
+youtube = "https://youtube.com/@ccclub" 
+instagram = "https://instagram.com/ccclub_mnnit"
+twitter = "https://twitter.com/ccclub_mnnit"
+linkedin = "https://linkedin.com/company/ccclub-mnnit"
+github = "https://github.com/cc-mnnit"
 
 # Theme Configuration
 [extra.theme]
