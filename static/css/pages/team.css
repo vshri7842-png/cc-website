@@ -47,6 +47,16 @@
     justify-content: center;
 }
 
+[data-theme="light"] .team-title,
+[data-theme="lofi"] .team-title,
+[data-theme="light"] .section-title,
+[data-theme="lofi"] .section-title {
+    background: linear-gradient(135deg, #000C40 0%, #1565C0 50%, #42A5F5 100%) !important;
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    background-clip: text !important;
+}
+
 .faculty-card {
     min-width: 320px;
     background: var(--color-base-100);
