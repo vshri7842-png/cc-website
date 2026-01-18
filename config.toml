@@ -83,12 +83,11 @@ nav = [
     { name = "Blog", url = "blog", type = "url", icon = "fa-solid fa-blog" },
     { name = "Events", url = "events", type = "url", icon = "fa-solid fa-calendar-days" },
     { name = "Projects", url = "contrihub", type = "url", icon = "fa-solid fa-code-branch" },
-    { name = "Impact", url = "impact", type = "url", icon = "fa-solid fa-rocket" },
     { name = "Roadmaps", url = "roadmaps", type = "url", icon = "fa-solid fa-route" },
-    { name = "Resources", url = "resources", type = "url", icon = "fa-solid fa-book-open" },
+    # { name = "Resources", url = "resources", type = "url", icon = "fa-solid fa-book-open" },
     { name = "Community", type = "dropdown", icon = "fa-solid fa-users", members = [
         { name = "Current Team", url = "team", type = "url", icon = "fa-solid fa-user-group" },
-        { name = "Alumni", url = "alumni", type = "url", icon = "fa-solid fa-graduation-cap" },
+        # { name = "Alumni", url = "alumni", type = "url", icon = "fa-solid fa-graduation-cap" },
     ] },
     { name = "Contact", url = "contact", type = "url", icon = "fa-solid fa-envelope" },
 ]
