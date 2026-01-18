@@ -113,36 +113,37 @@
 </div>
 {% endif %}
 
-    {# Roadmaps Scroll Section - Horizontal Scroll Animation #}
-    {% set roadmaps_section = get_section(path="roadmaps/_index.md") %}
-    {% if roadmaps_section and roadmaps_section.pages %}
-    <div class="roadmaps-scroll-wrapper">
-        <div class="roadmaps-sticky-container">
-            <div class="roadmaps-intro-text">
-                <div class="roadmaps-title">Learning Roadmaps</div>
-                <p class="roadmaps-subtitle">Explore structured learning paths</p>
-            </div>
+   {# Roadmaps Scroll Section - Horizontal Scroll Animation #}
+{% set roadmaps_section = get_section(path="roadmaps/_index.md") %}
+{% if roadmaps_section and roadmaps_section.pages %}
+<div class="lp-roadmaps-scroll-wrapper">
+    <div class="lp-roadmaps-sticky-container">
+        <div class="lp-roadmaps-intro-text">
+            <div class="lp-roadmaps-title">Learning Roadmaps</div>
+            <p class="lp-roadmaps-subtitle">Explore structured learning paths</p>
+        </div>
 
-            <div class="roadmaps-viewport">
-                <div class="roadmaps-slider-track" id="roadmapsSliderTrack">
-                    {% for roadmap in roadmaps_section.pages %}
-                    {% if roadmap.extra.carousel_image %}
-                    <div class="roadmap-card">
-                        <img src="{{ get_url(path=config.extra.image_base_url ~ '/' ~ roadmap.extra.carousel_image) }}" alt="{{ roadmap.extra.carousel_title | default(value=roadmap.title) }}">
-                        <div class="roadmap-card-content">
+        <div class="lp-roadmaps-viewport">
+            <div class="lp-roadmaps-slider-track" id="lp-roadmapsSliderTrack">
+                {% for roadmap in roadmaps_section.pages %}
+                {% if roadmap.extra.carousel_image %}
+                <div class="lp-roadmap-card">
+                    <img src="{{ get_url(path=config.extra.image_base_url ~ '/' ~ roadmap.extra.carousel_image) }}" alt="{{ roadmap.extra.carousel_title | default(value=roadmap.title) }}">
+                    <div class="lp-roadmap-card-content">
+                        <div class="lp-roadmap-text-wrapper">
                             <h3>{{ roadmap.extra.carousel_title | default(value=roadmap.title) }}</h3>
                             <p>{{ roadmap.extra.carousel_description | default(value=roadmap.description) }}</p>
-                            <a href="{{ roadmap.permalink | safe }}" class="roadmap-btn-action">Start Learning</a>
                         </div>
+                        <a href="{{ roadmap.permalink | safe }}" class="lp-roadmap-btn-action">Start Learning</a>
                     </div>
-                    {% endif %}
-                    {% endfor %}
                 </div>
+                {% endif %}
+                {% endfor %}
             </div>
-
         </div>
     </div>
-    {% endif %}
+</div>
+{% endif %}
 
     <!-- {# Feature Grid - Ashen Minimal Design #}
     {# Support both extra.features_section.features (new) and extra.features (legacy) for backward compatibility #}
