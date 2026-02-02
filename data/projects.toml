@@ -71,3 +71,11 @@ icon = "fa-solid fa-hand-sparkles"
 tech_stack = ["TensorFlow.js", "Next.js", "FastAPI"]
 repo_url = "https://devfolio.co/projects/gesto-244d"
 authors = ["PriyavKaneria", "sanskaromar", "shauryaDugar"]
+
+[[projects]]
+title = "Visivox"
+description = "Hands-free multimodal assistive control system. Empowers users with mobility impairments to control computers using gaze, facial gestures, and voice commands."
+icon = "fa-solid fa-eye"
+tech_stack = ["Python", "MediaPipe", "Julep API"]
+repo_url = "https://github.com/pratik4505/VisiVox"
+authors = ["pratik4505", "Utsav-Kasvala", "Vaibhavdev309"]
