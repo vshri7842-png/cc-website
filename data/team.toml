@@ -131,6 +131,14 @@ linkedin = "https://www.linkedin.com/in/tanishka-thakur-915893250"
 github = "https://www.github.com/tan-inv"
 instagram = "https://www.instagram.com/tanishka_0304"
 
+[[ccrs]]
+name = "Mrinal Varshney"
+role = "CCR"
+image = "teams/mrinal_varshney.webp"
+linkedin = "https://www.linkedin.com/in/mrinal-varshney-971a27250/"
+github = "https://github.com/MrinalVarshney"
+instagram = "https://instagram.com/mrinal_varshney"
+
 # Group 3: Design Team (3 Leads)
 [[design]]
 name = "Shikhar Gupta"
